@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talia Coffee Shop | 90s Retro Vibe</title>
+    <!-- Retro & Hand-written Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Shrikhand&family=DM+Sans:wght@400;500;700&family=Caveat:wght@600&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        terracotta: '#C85A32',
+                        ochre: '#E06A3B',
+                        sage: '#7A9A8B',
+                        parchment: '#FAF3E0',
+                        darkbrown: '#2C1D11',
+                        rust: '#A3421C'
+                    },
+                    fontFamily: {
+                        retro: ['Shrikhand', 'cursive'],
+                        sans: ['DM Sans', 'sans-serif'],
+                        handwriting: ['Caveat', 'cursive']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #FAF3E0; color: #2C1D11; font-family: 'DM Sans', sans-serif; }
+        .font-retro { font-family: 'Shrikhand', cursive; }
+        .font-hand { font-family: 'Caveat', cursive; }
+        .grain {
+            background-image: radial-gradient(rgba(200, 90, 50, 0.08) 1px, transparent 0);
+            background-size: 24px 24px;
+        }
+    </style>
+</head>
+<body class="grain min-h-screen flex flex-col justify-between">
+
+    <!-- Header / Navbar -->
+    <header class="bg-terracotta text-parchment sticky top-0 z-50 shadow-md border-b-4 border-rust">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full bg-ochre flex items-center justify-center font-retro text-xl shadow-inner border-2 border-parchment">☀️</div>
+                <div>
+                    <h1 class="font-retro text-xl tracking-wide">Talia</h1>
+                    <p class="text-xs font-hand tracking-wider text-parchment/90 -mt-1">Coffee Shop • 90s Vibe</p>
+                </div>
+            </div>
+            <button onclick="toggleCart()" class="relative bg-ochre hover:bg-rust text-parchment px-4 py-2 rounded-full font-bold text-sm shadow transition flex items-center space-x-2">
+                <span>🛒 Order</span>
+                <span id="cart-badge" class="bg-darkbrown text-parchment text-xs px-2 py-0.5 rounded-full">0</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative bg-gradient-to-b from-terracotta/20 to-parchment py-12 px-4 text-center border-b border-terracotta/20">
+        <div class="max-w-3xl mx-auto space-y-4">
+            <span class="inline-block bg-rust text-parchment text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full shadow-sm">Established in 1990s State of Mind</span>
+            <h2 class="font-retro text-4xl md:text-5xl text-terracotta drop-shadow-sm">Pretend that we're living in the 90s</h2>
+            <p class="text-base text-darkbrown/80 max-w-xl mx-auto font-medium">Sip slow, enjoy snapshots, and keep this space calm, warm, and cozy.</p>
+            
+            <!-- Interactive 90s Coffee Fortune Oracle -->
+            <div class="max-w-md mx-auto bg-darkbrown text-parchment p-6 rounded-2xl shadow-xl border-4 border-terracotta mt-6 space-y-4">
+                <div class="border-b border-parchment/20 pb-2 flex justify-between items-center">
+                    <span class="text-xs font-mono tracking-widest uppercase text-ochre font-bold">🥠 90s Coffee Fortune Oracle</span>
+                    <span class="text-[10px] bg-terracotta/40 px-2 py-0.5 rounded text-parchment/80 font-mono">v1.0</span>
+                </div>
+                
+                <p class="text-xs text-parchment/80">Tap the cookie to reveal your daily retro fortune & lucky coffee pairing:</p>
+
+                <div id="fortune-box" class="bg-parchment text-darkbrown p-4 rounded-xl shadow-inner text-center space-y-2 border-2 border-ochre min-h-[110px] flex flex-col justify-center items-center">
+                    <div id="cookie-icon" class="text-3xl animate-bounce">🥠</div>
+                    <p id="fortune-text" class="font-hand text-xl text-darkbrown leading-tight">"A warm cup of coffee holds answers to your busy day."</p>
+                    <span id="fortune-pair" class="text-xs font-bold text-terracotta uppercase tracking-wider block">✨ Lucky Order: Cappuccino & Brownie</span>
+                </div>
+
+                <button onclick="crackFortune()" class="w-full bg-ochre hover:bg-rust text-parchment font-bold text-xs py-2.5 rounded-xl shadow transition tracking-wide uppercase">
+                    ✨ Crack Fortune Cookie
+                </button>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Main Content Layout -->
+    <main class="max-w-6xl mx-auto px-4 py-12 space-y-16 flex-grow w-full">
+
+        <!-- Menu Section -->
+        <section id="menu" class="space-y-8">
+            <div class="text-center space-y-2">
+                <h3 class="font-retro text-3xl text-terracotta">The Menu</h3>
+                <p class="text-sm text-darkbrown/70 font-hand text-xl">Prices in Algerian Dinar (DA)</p>
+            </div>
+
+            <!-- Category Filter Tabs -->
+            <div class="flex flex-wrap justify-center gap-2" id="category-filters">
+                <button onclick="filterMenu('all', event)" class="cat-btn active bg-terracotta text-parchment px-4 py-2 rounded-full text-sm font-bold shadow transition">All Items</button>
+                <button onclick="filterMenu('cafe', event)" class="cat-btn bg-sage text-darkbrown px-4 py-2 rounded-full text-sm font-bold shadow transition">Les Cafés</button>
+                <button onclick="filterMenu('the', event)" class="cat-btn bg-sage text-darkbrown px-4 py-2 rounded-full text-sm font-bold shadow transition">Les Thés</button>
+                <button onclick="filterMenu('boisson', event)" class="cat-btn bg-sage text-darkbrown px-4 py-2 rounded-full text-sm font-bold shadow transition">Boissons</button>
+                <button onclick="filterMenu('gateau', event)" class="cat-btn bg-sage text-darkbrown px-4 py-2 rounded-full text-sm font-bold shadow transition">Gâteaux</button>
+                <button onclick="filterMenu('sandwich', event)" class="cat-btn bg-sage text-darkbrown px-4 py-2 rounded-full text-sm font-bold shadow transition">Sandwiches</button>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="max-w-md mx-auto">
+                <input type="text" id="menu-search" oninput="searchMenu()" placeholder="Search coffee, pastries, sandwiches..." class="w-full px-4 py-2 rounded-full border-2 border-terracotta/30 bg-white/50 focus:outline-none focus:border-terracotta text-sm">
+            </div>
+
+            <!-- Menu Grid -->
+            <div id="menu-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        </section>
+
+        <!-- Polaroid Snapshot Booth Section -->
+        <section id="polaroids" class="bg-sage/20 p-8 rounded-3xl border-2 border-sage/40 space-y-6 shadow-sm">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div>
+                    <h3 class="font-retro text-3xl text-terracotta">Polaroid Snapshot Wall</h3>
+                    <p class="text-darkbrown/80 text-sm">Browse community memories or pin your own instant 90s aesthetic photo note.</p>
+                </div>
+                <button onclick="openPolaroidModal()" class="bg-terracotta text-parchment px-5 py-2.5 rounded-full text-sm font-bold shadow hover:bg-rust transition">+ Pin a Polaroid</button>
+            </div>
+            <div id="polaroid-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6"></div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer id="about" class="bg-darkbrown text-parchment py-12 px-4 border-t-4 border-terracotta mt-16">
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-sm">
+            <div class="space-y-3">
+                <div class="flex items-center space-x-2">
+                    <span class="text-2xl">☀️</span>
+                    <h4 class="font-retro text-lg text-ochre">Talia Coffee Shop</h4>
+                </div>
+                <p class="text-parchment/70 font-light">Your stylish library & workspace coffee shop in Boufarik. Keep space calm, warm, and cozy.</p>
+            </div>
+            <div class="space-y-2">
+                <h4 class="font-bold text-ochre uppercase tracking-wider text-xs">Official Socials</h4>
+                <div class="flex flex-col space-y-1">
+                    <a href="https://www.instagram.com/talia.coffeshop" target="_blank" class="text-parchment/80 hover:text-ochre transition flex items-center space-x-1">
+                        <span>📸 Instagram: @talia.coffeshop</span>
+                    </a>
+                    <a href="https://www.tiktok.com/@taliacoffeshop" target="_blank" class="text-parchment/80 hover:text-ochre transition flex items-center space-x-1">
+                        <span>🎵 TikTok: @taliacoffeshop</span>
+                    </a>
+                </div>
+            </div>
+            <div class="space-y-2">
+                <h4 class="font-bold text-ochre uppercase tracking-wider text-xs">Open Hours</h4>
+                <p class="text-parchment/70">Saturday – Thursday: 9:30 AM – 9:30 PM</p>
+                <p class="text-parchment/70">Phone: 05 53967190</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cart Drawer Modal -->
+    <div id="cart-drawer" class="fixed inset-0 bg-black/50 z-50 hidden flex justify-end">
+        <div class="bg-parchment w-full max-w-md h-full shadow-2xl flex flex-col justify-between p-6 border-l-4 border-terracotta overflow-y-auto">
+            <div id="cart-step-items" class="space-y-4">
+                <div class="flex justify-between items-center border-b border-terracotta/20 pb-4">
+                    <h3 class="font-retro text-2xl text-terracotta">Your Order Cart</h3>
+                    <button onclick="toggleCart()" class="text-darkbrown font-bold text-xl">&times;</button>
+                </div>
+                <div id="cart-items" class="space-y-3 max-h-[35vh] overflow-y-auto pr-2"></div>
+
+                <!-- Payment Method Selection -->
+                <div id="payment-method-section" class="border-t border-terracotta/20 pt-4 space-y-3">
+                    <h4 class="font-bold text-xs uppercase tracking-wider text-darkbrown/80">Select Payment Method</h4>
+                    <div class="grid grid-cols-2 gap-2">
+                        <label class="cursor-pointer border-2 border-terracotta/30 bg-white p-3 rounded-xl flex flex-col items-center text-center space-y-1 hover:border-terracotta transition">
+                            <input type="radio" name="payment-type" value="card" checked onchange="togglePaymentForm()" class="accent-terracotta">
+                            <span class="text-xs font-bold text-darkbrown">💳 Online Card</span>
+                            <span class="text-[10px] text-terracotta font-semibold">CIB / EDAHABIA</span>
+                        </label>
+                        <label class="cursor-pointer border-2 border-terracotta/30 bg-white p-3 rounded-xl flex flex-col items-center text-center space-y-1 hover:border-terracotta transition">
+                            <input type="radio" name="payment-type" value="cash" onchange="togglePaymentForm()" class="accent-terracotta">
+                            <span class="text-xs font-bold text-darkbrown">💵 Pay at Counter</span>
+                            <span class="text-[10px] text-darkbrown/60">Cash on pickup</span>
+                        </label>
+                    </div>
+
+                    <!-- Online Card Terminal Input Form -->
+                    <div id="card-payment-form" class="bg-darkbrown text-parchment p-4 rounded-xl border-2 border-terracotta space-y-3 text-xs">
+                        <div class="flex justify-between items-center border-b border-parchment/20 pb-2">
+                            <span class="font-mono text-ochre font-bold tracking-widest text-[10px] uppercase">🕹️ 90s CIB / EDAHABIA Gateway</span>
+                            <span class="text-[9px] bg-sage/30 text-sage px-1.5 py-0.5 rounded font-mono">256-bit Encrypted</span>
+                        </div>
+                        <div>
+                            <label class="block font-medium mb-1 text-parchment/80">Cardholder Name</label>
+                            <input type="text" id="card-name" placeholder="e.g. AMINE BENALI" class="w-full bg-parchment/10 border border-parchment/30 rounded px-2.5 py-1.5 text-parchment placeholder-parchment/40 focus:outline-none focus:border-ochre font-mono text-xs uppercase">
+                        </div>
+                        <div>
+                            <label class="block font-medium mb-1 text-parchment/80">Card Number (EDAHABIA / CIB)</label>
+                            <input type="text" id="card-number" placeholder="6037 •••• •••• ••••" maxlength="19" class="w-full bg-parchment/10 border border-parchment/30 rounded px-2.5 py-1.5 text-parchment placeholder-parchment/40 focus:outline-none focus:border-ochre font-mono text-xs">
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block font-medium mb-1 text-parchment/80">Expiry (MM/YY)</label>
+                                <input type="text" id="card-expiry" placeholder="08/28" maxlength="5" class="w-full bg-parchment/10 border border-parchment/30 rounded px-2.5 py-1.5 text-parchment placeholder-parchment/40 focus:outline-none focus:border-ochre font-mono text-xs">
+                            </div>
+                            <div>
+                                <label class="block font-medium mb-1 text-parchment/80">CVC Code</label>
+                                <input type="password" id="card-cvc" placeholder="•••" maxlength="3" class="w-full bg-parchment/10 border border-parchment/30 rounded px-2.5 py-1.5 text-parchment placeholder-parchment/40 focus:outline-none focus:border-ochre font-mono text-xs">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Processing Screen -->
+            <div id="payment-processing-screen" class="hidden my-auto text-center space-y-4 py-8">
+                <div class="w-16 h-16 border-4 border-terracotta border-t-transparent rounded-full animate-spin mx-auto"></div>
+                <h4 class="font-retro text-2xl text-terracotta">Connecting Gateway...</h4>
+                <p class="text-xs text-darkbrown/70 font-mono">Processing payment for <span id="processing-amount" class="font-bold text-darkbrown">0 DA</span></p>
+            </div>
+
+            <!-- Payment Success Screen -->
+            <div id="payment-success-screen" class="hidden my-auto text-center space-y-4 py-6 bg-white p-6 rounded-2xl border-4 border-sage shadow-md">
+                <div class="w-12 h-12 bg-sage text-parchment rounded-full flex items-center justify-center font-bold text-2xl mx-auto shadow-inner">✓</div>
+                <h4 class="font-retro text-2xl text-terracotta">Payment Successful!</h4>
+                <p class="text-xs text-darkbrown/80 font-medium">Your online payment has been approved and processed.</p>
+                
+                <div class="bg-parchment p-4 rounded-xl border border-dashed border-terracotta/40 text-left space-y-1.5 font-mono text-xs text-darkbrown/90">
+                    <div class="flex justify-between"><span>Receipt ID:</span><span id="receipt-id" class="font-bold text-terracotta">#TAL-9082</span></div>
+                    <div class="flex justify-between"><span>Payment Method:</span><span id="receipt-method" class="font-bold">EDAHABIA / CIB</span></div>
+                    <div class="flex justify-between"><span>Total Paid:</span><span id="receipt-total" class="font-bold text-terracotta">0 DA</span></div>
+                    <div class="flex justify-between"><span>Pickup Location:</span><span>Boufarik Shop</span></div>
+                </div>
+
+                <button onclick="resetAndCloseCart()" class="w-full bg-terracotta text-parchment font-bold text-xs py-2.5 rounded-xl shadow hover:bg-rust transition uppercase tracking-wider">Close & Complete Order</button>
+            </div>
+
+            <div id="cart-footer-actions" class="border-t border-terracotta/20 pt-4 space-y-4">
+                <div class="flex justify-between font-bold text-lg text-darkbrown">
+                    <span>Total:</span>
+                    <span id="cart-total">0 DA</span>
+                </div>
+                <button onclick="checkout()" class="w-full bg-terracotta text-parchment font-bold py-3 rounded-xl shadow hover:bg-rust transition">Confirm & Pay</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Polaroid Submission Modal -->
+    <div id="polaroid-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-parchment w-full max-w-md p-6 rounded-3xl shadow-2xl border-4 border-sage relative space-y-4">
+            <div class="flex justify-between items-center">
+                <h3 class="font-retro text-2xl text-terracotta">Add a Polaroid</h3>
+                <button onclick="closePolaroidModal()" class="text-darkbrown font-bold text-xl">&times;</button>
+            </div>
+            <form onsubmit="addPolaroid(event)" class="space-y-3">
+                <div>
+                    <label class="block text-xs font-bold text-darkbrown mb-1">Caption / Memory</label>
+                    <input type="text" id="new-polaroid-caption" required placeholder="e.g. Rainy afternoon espresso" class="w-full px-3 py-2 rounded-lg border border-terracotta/30 bg-white text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-darkbrown mb-1">Your Name / Alias</label>
+                    <input type="text" id="new-polaroid-author" required placeholder="e.g. Sarah" class="w-full px-3 py-2 rounded-lg border border-terracotta/30 bg-white text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-darkbrown mb-1">Vibe Emoji</label>
+                    <input type="text" id="new-polaroid-emoji" required placeholder="☕" class="w-full px-3 py-2 rounded-lg border border-terracotta/30 bg-white text-sm">
+                </div>
+                <button type="submit" class="w-full bg-sage text-darkbrown font-bold py-2 rounded-lg shadow hover:bg-sage/80 transition">Pin Polaroid</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript logic properly enclosed inside script tags -->
+    <script>
+        const menuItems = [
+            { id: 1, name: "Espresso simple", category: "cafe", price: 150, desc: "Classic rich single shot" },
+            { id: 2, name: "Espresso double", category: "cafe", price: 250, desc: "Double shot bold energy" },
+            { id: 3, name: "Cold brew", category: "cafe", price: 200, desc: "Steeped slow for 24 hours" },
+            { id: 4, name: "Cappuccino", category: "cafe", price: 250, desc: "Velvety steamed milk foam" },
+            { id: 5, name: "Latte Macchiato", category: "cafe", price: 300, desc: "Layered warm milk & espresso" },
+            { id: 6, name: "Mocha", category: "cafe", price: 300, desc: "Espresso with rich chocolate" },
+            { id: 7, name: "Thé maison", category: "the", price: 150, desc: "Signature spiced herbal blend" },
+            { id: 8, name: "Iced tea", category: "the", price: 200, desc: "Refreshing peach or lemon tea" },
+            { id: 9, name: "Mojito", category: "boisson", price: 300, desc: "Minty lime sparkling refreshment" },
+            { id: 10, name: "Jus de saison", category: "boisson", price: 300, desc: "Freshly pressed seasonal fruit" },
+            { id: 11, name: "Brownie", category: "gateau", price: 300, desc: "Fudgy chocolate homemade square" },
+            { id: 12, name: "Cheesecake", category: "gateau", price: 300, desc: "Creamy classic New York style" },
+            { id: 13, name: "Cinnamon roll chocolate", category: "gateau", price: 350, desc: "Warm glazed roll with cocoa" },
+            { id: 14, name: "Poulet fume sandwich", category: "sandwich", price: 400, desc: "Smoked chicken club sandwich" },
+            { id: 15, name: "Mortadella sandwich", category: "sandwich", price: 350, desc: "Classic deli style sandwich" }
+        ];
+
+        let polaroids = [
+            { caption: "Rainy window coffee sipping", author: "Maya", emoji: "☕" },
+            { caption: "Listening to mixtapes all evening", author: "Karim", emoji: "📻" },
+            { caption: "Warm cinnamon rolls fresh out of the oven", author: "Lina", emoji: "🥐" }
+        ];
+
+        const fortunes = [
+            { quote: "Good ideas start with heavy caffeine & quiet corners.", pair: "✨ Lucky Order: Cold Brew + Cheesecake" },
+            { quote: "A nostalgic memory will make you smile today.", pair: "✨ Lucky Order: Thé Maison + Cinnamon Roll" },
+            { quote: "Slow down today; the best moments can't be rushed.", pair: "✨ Lucky Order: Latte Macchiato" },
+            { quote: "Great focus comes to those who take coffee breaks.", pair: "✨ Lucky Order: Espresso Double + Brownie" },
+            { quote: "A warm drink and a cozy desk solve most problems.", pair: "✨ Lucky Order: Mocha + Mortadella Sandwich" }
+        ];
+
+        let cart = [];
+
+        function crackFortune() {
+            const textEl = document.getElementById('fortune-text');
+            const pairEl = document.getElementById('fortune-pair');
+            const iconEl = document.getElementById('cookie-icon');
+
+            iconEl.classList.add('animate-spin');
+            textEl.innerText = "Cracking cookie open...";
+            pairEl.innerText = "✨ Consulting the 90s oracle...";
+
+            setTimeout(() => {
+                iconEl.classList.remove('animate-spin');
+                const random = fortunes[Math.floor(Math.random() * fortunes.length)];
+                textEl.innerText = `"${random.quote}"`;
+                pairEl.innerText = random.pair;
+            }, 500);
+        }
+
+        function renderMenu(itemsToRender) {
+            const grid = document.getElementById('menu-grid');
+            grid.innerHTML = '';
+            itemsToRender.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'bg-white/80 p-5 rounded-2xl shadow-sm border border-terracotta/20 flex flex-col justify-between';
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-darkbrown text-lg">${item.name}</h4>
+                            <span class="bg-ochre/20 text-terracotta font-bold text-sm px-2.5 py-1 rounded-full">${item.price} DA</span>
+                        </div>
+                        <p class="text-xs text-darkbrown/70 mb-4">${item.desc}</p>
+                    </div>
+                    <button onclick="addToCart(${item.id})" class="w-full bg-terracotta text-parchment text-xs font-bold py-2 rounded-lg shadow hover:bg-rust transition">Add to Order</button>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterMenu(category, event) {
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.classList.remove('bg-terracotta', 'text-parchment');
+                btn.classList.add('bg-sage', 'text-darkbrown');
+            });
+            event.target.classList.remove('bg-sage', 'text-darkbrown');
+            event.target.classList.add('bg-terracotta', 'text-parchment');
+
+            if (category === 'all') {
+                renderMenu(menuItems);
+            } else {
+                renderMenu(menuItems.filter(i => i.category === category));
+            }
+        }
+
+        function searchMenu() {
+            const query = document.getElementById('menu-search').value.toLowerCase();
+            const filtered = menuItems.filter(i => i.name.toLowerCase().includes(query) || i.desc.toLowerCase().includes(query));
+            renderMenu(filtered);
+        }
+
+        function addToCart(id) {
+            const item = menuItems.find(i => i.id === id);
+            const existing = cart.find(c => c.id === id);
+            if (existing) { existing.qty++; } else { cart.push({ ...item, qty: 1 }); }
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const badge = document.getElementById('cart-badge');
+            const container = document.getElementById('cart-items');
+            const totalEl = document.getElementById('cart-total');
+            badge.innerText = cart.reduce((sum, i) => sum + i.qty, 0);
+
+            container.innerHTML = '';
+            if (cart.length === 0) {
+                container.innerHTML = '<p class="text-center text-darkbrown/60 py-8">Your cart is empty.</p>';
+                totalEl.innerText = '0 DA';
+                return;
+            }
+
+            let total = 0;
+            cart.forEach(item => {
+                total += item.price * item.qty;
+                const div = document.createElement('div');
+                div.className = 'flex justify-between items-center bg-white p-3 rounded-xl border border-terracotta/20';
+                div.innerHTML = `
+                    <div>
+                        <h5 class="font-bold text-sm text-darkbrown">${item.name}</h5>
+                        <p class="text-xs text-darkbrown/70">${item.price} DA × ${item.qty}</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="changeQty(${item.id}, -1)" class="w-6 h-6 bg-sage/40 rounded font-bold text-xs">-</button>
+                        <span class="text-sm font-bold">${item.qty}</span>
+                        <button onclick="changeQty(${item.id}, 1)" class="w-6 h-6 bg-sage/40 rounded font-bold text-xs">+</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+            totalEl.innerText = total + ' DA';
+        }
+
+        function changeQty(id, delta) {
+            const item = cart.find(c => c.id === id);
+            if (item) {
+                item.qty += delta;
+                if (item.qty <= 0) { cart = cart.filter(c => c.id !== id); }
+            }
+            updateCartUI();
+        }
+
+        function toggleCart() { 
+            document.getElementById('cart-drawer').classList.toggle('hidden'); 
+        }
+
+        function togglePaymentForm() {
+            const cardSelected = document.querySelector('input[name="payment-type"]:checked').value === 'card';
+            document.getElementById('card-payment-form').style.display = cardSelected ? 'block' : 'none';
+        }
+
+        function checkout() {
+            if (cart.length === 0) { 
+                const msg = document.createElement('div');
+                msg.className = 'fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-darkbrown text-parchment text-xs px-4 py-2 rounded-full shadow-lg z-50';
+                msg.innerText = 'Your cart is empty!';
+                document.body.appendChild(msg);
+                setTimeout(() => msg.remove(), 2000);
+                return; 
+            }
+
+            const paymentType = document.querySelector('input[name="payment-type"]:checked').value;
+            const totalAmount = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+
+            if (paymentType === 'card') {
+                const name = document.getElementById('card-name').value.trim();
+                const number = document.getElementById('card-number').value.trim();
+                const expiry = document.getElementById('card-expiry').value.trim();
+                const cvc = document.getElementById('card-cvc').value.trim();
+
+                if (!name || !number || !expiry || !cvc) {
+                    alert('Please fill out all card payment fields.');
+                    return;
+                }
+
+                // Show processing animation
+                document.getElementById('cart-step-items').classList.add('hidden');
+                document.getElementById('cart-footer-actions').classList.add('hidden');
+                document.getElementById('payment-processing-screen').classList.remove('hidden');
+                document.getElementById('processing-amount').innerText = totalAmount + ' DA';
+
+                setTimeout(() => {
+                    document.getElementById('payment-processing-screen').classList.add('hidden');
+                    document.getElementById('payment-success-screen').classList.remove('hidden');
+                    document.getElementById('receipt-id').innerText = '#TAL-' + Math.floor(1000 + Math.random() * 9000);
+                    document.getElementById('receipt-method').innerText = 'EDAHABIA / CIB Online';
+                    document.getElementById('receipt-total').innerText = totalAmount + ' DA';
+                }, 2000);
+            } else {
+                // Cash at counter
+                document.getElementById('cart-step-items').classList.add('hidden');
+                document.getElementById('cart-footer-actions').classList.add('hidden');
+                document.getElementById('payment-success-screen').classList.remove('hidden');
+                document.getElementById('receipt-id').innerText = '#TAL-' + Math.floor(1000 + Math.random() * 9000);
+                document.getElementById('receipt-method').innerText = 'Pay at Counter (Cash)';
+                document.getElementById('receipt-total').innerText = totalAmount + ' DA';
+            }
+        }
+
+        function resetAndCloseCart() {
+            cart = [];
+            updateCartUI();
+            document.getElementById('cart-step-items').classList.remove('hidden');
+            document.getElementById('cart-footer-actions').classList.remove('hidden');
+            document.getElementById('payment-success-screen').classList.add('hidden');
+            document.getElementById('card-name').value = '';
+            document.getElementById('card-number').value = '';
+            document.getElementById('card-expiry').value = '';
+            document.getElementById('card-cvc').value = '';
+            toggleCart();
+        }
+
+        function renderPolaroids() {
+            const grid = document.getElementById('polaroid-grid');
+            grid.innerHTML = '';
+            polaroids.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'bg-white p-4 pb-6 rounded shadow-md border border-stone-200 transform hover:-translate-y-1 transition duration-200 flex flex-col items-center text-center space-y-3';
+                card.innerHTML = `
+                    <div class="w-full h-32 bg-parchment/60 rounded flex items-center justify-center text-4xl border border-dashed border-terracotta/30">${p.emoji}</div>
+                    <p class="font-hand text-xl text-darkbrown leading-tight">"${p.caption}"</p>
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-terracotta">— ${p.author}</span>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function openPolaroidModal() { document.getElementById('polaroid-modal').classList.remove('hidden'); }
+        function closePolaroidModal() { document.getElementById('polaroid-modal').classList.add('hidden'); }
+
+        function addPolaroid(e) {
+            e.preventDefault();
+            polaroids.unshift({
+                caption: document.getElementById('new-polaroid-caption').value,
+                author: document.getElementById('new-polaroid-author').value,
+                emoji: document.getElementById('new-polaroid-emoji').value || '📸'
+            });
+            renderPolaroids();
+            closePolaroidModal();
+            e.target.reset();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderMenu(menuItems);
+            renderPolaroids();
+        });
+    </script>
+</body>
+</html>
